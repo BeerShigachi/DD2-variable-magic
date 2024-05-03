@@ -1,6 +1,6 @@
 -- author : BeerShigachi
 -- date : 3 May 2024
--- version : 1.1.0
+-- version : 1.1.1
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
@@ -22,8 +22,8 @@ local FLAGRATION_SIZE_SCALE = 1.0
 local LEVIN_SIZE_SCALE = 1.0
 local FRIGOR_SIZE_SCALE = 1.0
 local ANODYNE_SIZE_SCALE = 1.0
-local CURE_SIZE_SCALE = 1.0
-local HAIST_SIZE_SCALE = 1.0
+local HALIDOM_SIZE_SCALE = 1.0
+local CELERITY_SIZE_SCALE = 1.0
 local SEISM_SIZE_SCALE = 1.0
 local SALAMANDER_SIZE_SCALE = 1.0
 local HAGOL_SIZE_SCALE = 1.0
@@ -92,10 +92,10 @@ local data_table = {
     [HIGH_FRIGOR_ICE_ELEMENT_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE },
     [ANODYNE_HEAL_HASH] = { multiplier = nil, scale = ANODYNE_SIZE_SCALE },
     [ANODYNE_ATTACK_UNDEAD_HASH] = { multiplier = ANODYNE_ATTACK_UNDEAD_MULTIPLIER, scale = nil },
-    [HALIDOM_HASH] = { multiplier = nil, scale = CURE_SIZE_SCALE },
-    [CELERITY_HASH] = { multiplier = nil, scale = HAIST_SIZE_SCALE },
-    [HIGH_HALIDOM_HASH] = { multiplier = nil, scale = CURE_SIZE_SCALE },
-    [HIGH_CELERITY_HASH] = { multiplier = nil, scale = HAIST_SIZE_SCALE },
+    [HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE },
+    [CELERITY_HASH] = { multiplier = nil, scale = CELERITY_SIZE_SCALE },
+    [HIGH_HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE },
+    [HIGH_CELERITY_HASH] = { multiplier = nil, scale = CELERITY_SIZE_SCALE },
     [SEISM_INITIAL_HASH] = { multiplier = SEISM_MULTIPLIER, scale = SEISM_SIZE_SCALE },
     [SEISM_ADDITIONAL_ATK_HASH] = { multiplier = SEISM_MULTIPLIER, scale = SEISM_SIZE_SCALE },
     [SALAMANDER_HASH] = { multiplier = SALAMANDER_MULTIPLIER, scale = SALAMANDER_SIZE_SCALE },
