@@ -1,6 +1,6 @@
 -- author : BeerShigachi
--- date : 3 May 2024
--- version : 1.1.1
+-- date : 5 May 2024
+-- version : 1.1.2
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
@@ -9,7 +9,7 @@ local LEVIN_MULTIPLIER = 1.0
 local FRIGOR_MULTIPLIER = 1.0
 local ANODYNE_ATTACK_UNDEAD_MULTIPLIER = 1.0
 local SEISM_MULTIPLIER = 1.0
-local SALAMANDER_MULTIPLIER = 1.0
+local SALAMANDER_MULTIPLIER = 1.0 -- require restart the game everytime you reset scripts or change the values.
 local HAGOL_MULTIPLIER = 1.0
 local THUNDERMINE_DAMAGE_MULTIPLIER = 1.0
 local DECANTER_SAP_MULTIPLIER = 1.0
@@ -18,16 +18,16 @@ local EMPYREAN_MULTIPLIER = 1.0
 local EMPYREAN_ATTACK_UNDEAD_MULTIPLIER = 1.0
 
 -- Spell effect size(area) scale: setting 2.0 means 2 times bigger.
-local FLAGRATION_SIZE_SCALE = 1.0
+local FLAGRATION_SIZE_SCALE = 1.5
 local LEVIN_SIZE_SCALE = 1.0
 local FRIGOR_SIZE_SCALE = 1.0
-local ANODYNE_SIZE_SCALE = 1.0
-local HALIDOM_SIZE_SCALE = 1.0
-local CELERITY_SIZE_SCALE = 1.0
-local SEISM_SIZE_SCALE = 1.0
-local SALAMANDER_SIZE_SCALE = 1.0
+local ANODYNE_SIZE_SCALE = 3.0
+local HALIDOM_SIZE_SCALE = 3.0
+local CELERITY_SIZE_SCALE = 3.0
+local SEISM_SIZE_SCALE = 1.5
+local SALAMANDER_SIZE_SCALE = 1.5
 local HAGOL_SIZE_SCALE = 1.0
-local THUNDERMINE_SIZE_SCALE = 1.0
+local THUNDERMINE_SIZE_SCALE = 1.5
 local FLARE_SIZE_SCALE = 1.0
 local EMPYREAN_SIZE_SCALE = 1.0 -- CAUTION: NOT GOOD FOR YORU EYES!!
 
@@ -79,44 +79,44 @@ local EMPYREAN_ATTACK_UNDEAD_HASH = 3418934292
 local HIGH_EMPYREAN_ATTACK_UNDEAD_HASH = 512380958
 
 local data_table = {
-    [FLAGRATION_VFX_HASH] = { multiplier = nil, scale = FLAGRATION_SIZE_SCALE },
-    [HIGH_FLAGRATION_VFX_HASH] = { multiplier = nil, scale = FLAGRATION_SIZE_SCALE },
-    [FLAGRATION_HASH] = { multiplier = FLAGRATION_MULTIPLIER, scale = nil },
-    [HIGH_FLAGRATION_HASH] = { multiplier = FLAGRATION_MULTIPLIER, scale = nil },
-    [LEVIN_HASH] = { multiplier = LEVIN_MULTIPLIER, scale = LEVIN_SIZE_SCALE },
-    [LEVIN_INITIAL_HASH] = { multiplier = LEVIN_MULTIPLIER, scale = LEVIN_SIZE_SCALE },
-    [LEVIN_ADDITIONAL_ATK_HASH] = { multiplier = LEVIN_MULTIPLIER, scale = LEVIN_SIZE_SCALE },
-    [FRIGOR_FRONT_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE },
-    [FRIGOR_PILLER_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE },
-    [HIGH_FRIGOR_ADDITIONAL_ATK_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE },
-    [HIGH_FRIGOR_ICE_ELEMENT_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE },
-    [ANODYNE_HEAL_HASH] = { multiplier = nil, scale = ANODYNE_SIZE_SCALE },
-    [ANODYNE_ATTACK_UNDEAD_HASH] = { multiplier = ANODYNE_ATTACK_UNDEAD_MULTIPLIER, scale = nil },
-    [HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE },
-    [CELERITY_HASH] = { multiplier = nil, scale = CELERITY_SIZE_SCALE },
-    [HIGH_HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE },
-    [HIGH_CELERITY_HASH] = { multiplier = nil, scale = CELERITY_SIZE_SCALE },
-    [SEISM_INITIAL_HASH] = { multiplier = SEISM_MULTIPLIER, scale = SEISM_SIZE_SCALE },
-    [SEISM_ADDITIONAL_ATK_HASH] = { multiplier = SEISM_MULTIPLIER, scale = SEISM_SIZE_SCALE },
-    [SALAMANDER_HASH] = { multiplier = SALAMANDER_MULTIPLIER, scale = SALAMANDER_SIZE_SCALE },
-    [HIGH_SALAMANDER_HASH] = { multiplier = SALAMANDER_MULTIPLIER, scale = SALAMANDER_SIZE_SCALE },
-    [HAGOL_HASH] = { multiplier = HAGOL_MULTIPLIER, scale = HAGOL_SIZE_SCALE },
-    [HIGH_HAGOL_HASH] = { multiplier = HAGOL_MULTIPLIER, scale = HAGOL_SIZE_SCALE },
-    [THUNDERMINE_HASH] = { multiplier = nil, scale = THUNDERMINE_SIZE_SCALE },
-    [HIGH_THUNDERMINE_HASH] = { multiplier = nil, scale = THUNDERMINE_SIZE_SCALE },
-    [THUNDERMINE_DAMAGE_HASH] = { multiplier = THUNDERMINE_DAMAGE_MULTIPLIER, scale = nil },
-    [DECANTER_SAP_HASH] = { multiplier = DECANTER_SAP_MULTIPLIER, scale = nil },
-    [HIGH_DECANTER_SAP_HASH] = { multiplier = DECANTER_SAP_MULTIPLIER, scale = nil },
-    [FLARE_FIRST_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE },
-    [FLARE_SECOND_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE },
-    [FLARE_THIRD_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE },
-    [FLARE_FINISH_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE },
-    [EMPYREAN_VFX_HASH] = { multiplier = nil, scale = EMPYREAN_SIZE_SCALE },
-    [HIGH_EMPYREAN_VFX_HASH] = { multiplier = nil, scale = EMPYREAN_SIZE_SCALE },
-    [EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil },
-    [HIGH_EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil },
-    [EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil },
-    [HIGH_EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil }
+    [FLAGRATION_VFX_HASH] = { multiplier = nil, scale = FLAGRATION_SIZE_SCALE, cache = nil },
+    [HIGH_FLAGRATION_VFX_HASH] = { multiplier = nil, scale = FLAGRATION_SIZE_SCALE, cache = nil },
+    [FLAGRATION_HASH] = { multiplier = FLAGRATION_MULTIPLIER, scale = nil, cache = nil },
+    [HIGH_FLAGRATION_HASH] = { multiplier = FLAGRATION_MULTIPLIER, scale = nil, cache = nil },
+    [LEVIN_HASH] = { multiplier = LEVIN_MULTIPLIER, scale = LEVIN_SIZE_SCALE, cache = nil },
+    [LEVIN_INITIAL_HASH] = { multiplier = LEVIN_MULTIPLIER, scale = LEVIN_SIZE_SCALE, cache = nil },
+    [LEVIN_ADDITIONAL_ATK_HASH] = { multiplier = LEVIN_MULTIPLIER, scale = LEVIN_SIZE_SCALE, cache = nil },
+    [FRIGOR_FRONT_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE, cache = nil },
+    [FRIGOR_PILLER_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE, cache = nil },
+    [HIGH_FRIGOR_ADDITIONAL_ATK_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE, cache = nil },
+    [HIGH_FRIGOR_ICE_ELEMENT_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE, cache = nil },
+    [ANODYNE_HEAL_HASH] = { multiplier = nil, scale = ANODYNE_SIZE_SCALE, cache = nil },
+    [ANODYNE_ATTACK_UNDEAD_HASH] = { multiplier = ANODYNE_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil },
+    [HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE, cache = nil },
+    [CELERITY_HASH] = { multiplier = nil, scale = CELERITY_SIZE_SCALE, cache = nil },
+    [HIGH_HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE, cache = nil },
+    [HIGH_CELERITY_HASH] = { multiplier = nil, scale = CELERITY_SIZE_SCALE, cache = nil },
+    [SEISM_INITIAL_HASH] = { multiplier = SEISM_MULTIPLIER, scale = SEISM_SIZE_SCALE, cache = nil },
+    [SEISM_ADDITIONAL_ATK_HASH] = { multiplier = SEISM_MULTIPLIER, scale = SEISM_SIZE_SCALE, cache = nil },
+    [SALAMANDER_HASH] = { multiplier = SALAMANDER_MULTIPLIER, scale = SALAMANDER_SIZE_SCALE, cache = nil },
+    [HIGH_SALAMANDER_HASH] = { multiplier = SALAMANDER_MULTIPLIER, scale = SALAMANDER_SIZE_SCALE, cache = nil },
+    [HAGOL_HASH] = { multiplier = HAGOL_MULTIPLIER, scale = HAGOL_SIZE_SCALE, cache = nil },
+    [HIGH_HAGOL_HASH] = { multiplier = HAGOL_MULTIPLIER, scale = HAGOL_SIZE_SCALE, cache = nil },
+    [THUNDERMINE_HASH] = { multiplier = nil, scale = THUNDERMINE_SIZE_SCALE, cache = nil },
+    [HIGH_THUNDERMINE_HASH] = { multiplier = nil, scale = THUNDERMINE_SIZE_SCALE, cache = nil },
+    [THUNDERMINE_DAMAGE_HASH] = { multiplier = THUNDERMINE_DAMAGE_MULTIPLIER, scale = nil, cache = nil },
+    [DECANTER_SAP_HASH] = { multiplier = DECANTER_SAP_MULTIPLIER, scale = nil, cache = nil },
+    [HIGH_DECANTER_SAP_HASH] = { multiplier = DECANTER_SAP_MULTIPLIER, scale = nil, cache = nil },
+    [FLARE_FIRST_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil },
+    [FLARE_SECOND_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil },
+    [FLARE_THIRD_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil },
+    [FLARE_FINISH_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil },
+    [EMPYREAN_VFX_HASH] = { multiplier = nil, scale = EMPYREAN_SIZE_SCALE, cache = nil },
+    [HIGH_EMPYREAN_VFX_HASH] = { multiplier = nil, scale = EMPYREAN_SIZE_SCALE, cache = nil },
+    [EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil, cache = nil },
+    [HIGH_EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil, cache = nil },
+    [EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil },
+    [HIGH_EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil }
 }
 
 
@@ -198,10 +198,15 @@ function (args)
                 local data = data_table[hash_]
                 if data and data.multiplier then
                     local attack_user_data = damage_info:get_field("<AttackUserData>k__BackingField")
-                    local new_rate = attack_user_data:get_field("ActionRate")
-                    new_rate = new_rate * data.multiplier
-                    attack_user_data:set_field("ActionRate", new_rate)
-                    damage_info:set_field("<AttackUserData>k__BackingField", attack_user_data)
+                    if data.cache == nil then
+                        local origin = attack_user_data:get_field("ActionRate")
+                        data.cache = origin * data.multiplier
+                        attack_user_data:set_field("ActionRate", data.cache)
+                        damage_info:set_field("<AttackUserData>k__BackingField", attack_user_data)
+                    else
+                        attack_user_data:set_field("ActionRate", data.cache)
+                        damage_info:set_field("<AttackUserData>k__BackingField", attack_user_data)
+                    end
                 end
             end
         end
