@@ -1,6 +1,6 @@
 -- author : BeerShigachi
--- date : 5 May 2024
--- version : 1.1.2
+-- date : 6 May 2024
+-- version : 1.2.0
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
@@ -9,27 +9,33 @@ local LEVIN_MULTIPLIER = 1.0
 local FRIGOR_MULTIPLIER = 1.0
 local ANODYNE_ATTACK_UNDEAD_MULTIPLIER = 1.0
 local SEISM_MULTIPLIER = 1.0
-local SALAMANDER_MULTIPLIER = 1.0 -- require restart the game everytime you reset scripts and everytime you change this values.
+local SALAMANDER_MULTIPLIER = 1.0
 local HAGOL_MULTIPLIER = 1.0
 local THUNDERMINE_DAMAGE_MULTIPLIER = 1.0
 local DECANTER_SAP_MULTIPLIER = 1.0
 local FLARE_MULTIPLIER = 1.0
 local EMPYREAN_MULTIPLIER = 1.0
 local EMPYREAN_ATTACK_UNDEAD_MULTIPLIER = 1.0
+local METEORON_MULTIPLIER = 1.0
+local METEORON_PROJECTILE_MULTIPLIER = 1.0
+local MAELSTORM_MULTIPLIER = 1.0
 
 -- Spell effect size(area) scale: setting 2.0 means 2 times bigger.
-local FLAGRATION_SIZE_SCALE = 1.5
+local FLAGRATION_SIZE_SCALE = 1.0
 local LEVIN_SIZE_SCALE = 1.0
 local FRIGOR_SIZE_SCALE = 1.0
-local ANODYNE_SIZE_SCALE = 3.0
-local HALIDOM_SIZE_SCALE = 3.0
-local CELERITY_SIZE_SCALE = 3.0
-local SEISM_SIZE_SCALE = 1.5
-local SALAMANDER_SIZE_SCALE = 1.5
+local ANODYNE_SIZE_SCALE = 1.0
+local HALIDOM_SIZE_SCALE = 1.0
+local CELERITY_SIZE_SCALE = 1.0
+local SEISM_SIZE_SCALE = 1.0
+local SALAMANDER_SIZE_SCALE = 1.0
 local HAGOL_SIZE_SCALE = 1.0
-local THUNDERMINE_SIZE_SCALE = 1.5
+local THUNDERMINE_SIZE_SCALE = 1.0
 local FLARE_SIZE_SCALE = 1.0
 local EMPYREAN_SIZE_SCALE = 1.0 -- CAUTION: NOT GOOD FOR YORU EYES!!
+local METEORON_SIZE_SCALE = 1.0
+local METEORON_PROJECTILE_SIZE_SCALE = 1.0
+local MAELSTORM_SIZE_SCALE = 1.0
 
 -- SUPER OP if you want
 -- CHANGE THIS VALUE TO true REQUIRES RESTART THE GAME! set this true to keep pulsing until running out of the orb lifetiem.
@@ -77,6 +83,12 @@ local EMPYREAN_HASH = 1883937863
 local HIGH_EMPYREAN_HASH = 3721181979
 local EMPYREAN_ATTACK_UNDEAD_HASH = 3418934292
 local HIGH_EMPYREAN_ATTACK_UNDEAD_HASH = 512380958
+local METEORON_CAST_HASH = 1760007578
+local METEORON_FIRST_HASH = 3625826559
+local METEORON_SECOND_HASH = 1459016917
+local METEORON_FIRST_PROJECTILE_HASH = 615362208
+local METEORON_SECOND_PROJECTILE_HASH = 1431585106
+local MAELSTORM_HASH = 4109786672
 
 -- SALAMANDER base rate, requires update
 local BASE_RATE_SALAMANDER = 2.0
@@ -119,7 +131,12 @@ local data_table = {
     [EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil, cache = nil },
     [HIGH_EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil, cache = nil },
     [EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil },
-    [HIGH_EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil }
+    [HIGH_EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil },
+    [METEORON_FIRST_HASH] = { multiplier = METEORON_MULTIPLIER, scale = METEORON_SIZE_SCALE, cache = nil },
+    [METEORON_FIRST_PROJECTILE_HASH] = { multiplier = METEORON_PROJECTILE_MULTIPLIER, scale = METEORON_PROJECTILE_SIZE_SCALE, cache = nil },
+    [METEORON_SECOND_HASH] = { multiplier = METEORON_MULTIPLIER, scale = METEORON_SIZE_SCALE, cache = nil },
+    [METEORON_SECOND_PROJECTILE_HASH] = { multiplier = METEORON_PROJECTILE_MULTIPLIER, scale = METEORON_PROJECTILE_SIZE_SCALE, cache = nil },
+    [MAELSTORM_HASH] = { multiplier = MAELSTORM_MULTIPLIER, scale = MAELSTORM_SIZE_SCALE, cache = nil }
 }
 
 
@@ -175,7 +192,6 @@ sdk_.hook(sdk_.find_type_definition("app.GuiManager"):get_method("OnChangeSceneT
 sdk_.hook(sdk_.find_type_definition("app.ShellManager"):get_method("registShell(app.Shell)"),
     function (args)
         local app_shell = sdk_.to_managed_object(args[3])
-        print("register new shell", app_shell:get_ShellParamId())
         local data = data_table[app_shell:get_ShellParamId()]
         if data and data.scale then
             local shell_base_param = app_shell:get_ShellParameter():get_field("ShellBaseParam")
