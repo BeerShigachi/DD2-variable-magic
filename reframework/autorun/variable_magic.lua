@@ -9,7 +9,7 @@ local LEVIN_MULTIPLIER = 1.0
 local FRIGOR_MULTIPLIER = 1.0
 local ANODYNE_ATTACK_UNDEAD_MULTIPLIER = 1.0
 local SEISM_MULTIPLIER = 1.0
-local SALAMANDER_MULTIPLIER = 1.0 -- require restart the game everytime you reset scripts or change the values.
+local SALAMANDER_MULTIPLIER = 1.0 -- require restart the game everytime you reset scripts and everytime you change this values.
 local HAGOL_MULTIPLIER = 1.0
 local THUNDERMINE_DAMAGE_MULTIPLIER = 1.0
 local DECANTER_SAP_MULTIPLIER = 1.0
@@ -77,6 +77,9 @@ local EMPYREAN_HASH = 1883937863
 local HIGH_EMPYREAN_HASH = 3721181979
 local EMPYREAN_ATTACK_UNDEAD_HASH = 3418934292
 local HIGH_EMPYREAN_ATTACK_UNDEAD_HASH = 512380958
+
+-- SALAMANDER base rate, requires update
+local BASE_RATE_SALAMANDER = 2.0
 
 local data_table = {
     [FLAGRATION_VFX_HASH] = { multiplier = nil, scale = FLAGRATION_SIZE_SCALE, cache = nil },
@@ -198,15 +201,20 @@ function (args)
                 local data = data_table[hash_]
                 if data and data.multiplier then
                     local attack_user_data = damage_info:get_field("<AttackUserData>k__BackingField")
-                    if data.cache == nil then
+                    local new_rate
+                    if hash_ == SEISM_ADDITIONAL_ATK_HASH then
+                        new_rate = attack_user_data:get_field("ActionRate") * data.multiplier
+                    elseif hash_ == SALAMANDER_HASH or hash_ == HIGH_SALAMANDER_HASH then
+                        new_rate = SALAMANDER_MULTIPLIER * BASE_RATE_SALAMANDER
+                    elseif data.cache == nil then
                         local origin = attack_user_data:get_field("ActionRate")
-                        data.cache = origin * data.multiplier
-                        attack_user_data:set_field("ActionRate", data.cache)
-                        damage_info:set_field("<AttackUserData>k__BackingField", attack_user_data)
+                        new_rate = origin * data.multiplier
+                        data.cache = new_rate
                     else
-                        attack_user_data:set_field("ActionRate", data.cache)
-                        damage_info:set_field("<AttackUserData>k__BackingField", attack_user_data)
+                        new_rate = data.cache
                     end
+                    attack_user_data:set_field("ActionRate", new_rate)
+                    damage_info:set_field("<AttackUserData>k__BackingField", attack_user_data)
                 end
             end
         end
