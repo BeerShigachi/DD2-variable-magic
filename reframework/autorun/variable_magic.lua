@@ -213,10 +213,11 @@ function (args)
     local damage_info = sdk_.to_managed_object(args[3])
     -- perhaps better to use _player_chara:get_GameObject()
     local attacker_hit_controller = damage_info:get_field("<AttackOwnerHitController>k__BackingField")
-    if attacker_hit_controller ~= nil then
+    local attack_hit_controller = damage_info:get_field("<AttackHitController>k__BackingField")
+    if attacker_hit_controller ~= nil and attack_hit_controller ~= nil then
         local attacker_chara = attacker_hit_controller:get_CachedCharacter()
         if attacker_chara == _player_chara then
-            local attacker_shell_cache = damage_info:get_field("<AttackHitController>k__BackingField"):get_CachedShell()
+            local attacker_shell_cache = attack_hit_controller:get_CachedShell()
             if attacker_shell_cache ~= nil then
                 local hash_ = attacker_shell_cache:get_ShellParamId()
                 local data = data_table[hash_]
