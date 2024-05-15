@@ -1,6 +1,6 @@
 -- author : BeerShigachi
 -- date : 15 May 2024
--- version : 1.2.0
+-- version : 1.2.1
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
@@ -78,6 +78,7 @@ local FLARE_FIRST_HASH = 2949517138
 local FLARE_SECOND_HASH = 340281505
 local FLARE_THIRD_HASH = 3543475679
 local FLARE_FINISH_HASH = 3321228649
+local FLARE_MAX_FINISH_HASH = 2810699174
 local EMPYREAN_VFX_HASH = 2653820902
 local HIGH_EMPYREAN_VFX_HASH = 2575444828
 local EMPYREAN_HASH = 1883937863
@@ -127,6 +128,7 @@ local data_table = {
     [FLARE_SECOND_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil },
     [FLARE_THIRD_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil },
     [FLARE_FINISH_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil },
+    [FLARE_MAX_FINISH_HASH] = { multiplier = FLARE_MULTIPLIER, scale = FLARE_SIZE_SCALE, cache = nil},
     [EMPYREAN_VFX_HASH] = { multiplier = nil, scale = EMPYREAN_SIZE_SCALE, cache = nil },
     [HIGH_EMPYREAN_VFX_HASH] = { multiplier = nil, scale = EMPYREAN_SIZE_SCALE, cache = nil },
     [EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil, cache = nil },
@@ -233,8 +235,10 @@ function (args)
                         new_rate = data.cache
                     end
                     attack_user_data:set_field("ActionRate", new_rate)
+                    print(new_rate)
                     damage_info:set_field("<AttackUserData>k__BackingField", attack_user_data)
                 end
+                print("hash", hash_)
             end
         end
     end
