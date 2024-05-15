@@ -1,5 +1,5 @@
 -- author : BeerShigachi
--- date : 6 May 2024
+-- date : 15 May 2024
 -- version : 1.2.0
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
@@ -33,6 +33,7 @@ local HAGOL_SIZE_SCALE = 1.0
 local THUNDERMINE_SIZE_SCALE = 1.0
 local FLARE_SIZE_SCALE = 1.0
 local EMPYREAN_SIZE_SCALE = 1.0 -- CAUTION: NOT GOOD FOR YORU EYES!!
+local PAEAN_SIZE_SCALE = 1.0
 local METEORON_SIZE_SCALE = 1.0
 local METEORON_PROJECTILE_SIZE_SCALE = 1.0
 local MAELSTORM_SIZE_SCALE = 1.0
@@ -83,7 +84,7 @@ local EMPYREAN_HASH = 1883937863
 local HIGH_EMPYREAN_HASH = 3721181979
 local EMPYREAN_ATTACK_UNDEAD_HASH = 3418934292
 local HIGH_EMPYREAN_ATTACK_UNDEAD_HASH = 512380958
-local METEORON_CAST_HASH = 1760007578
+local PAEAN_HASH = 1827152808
 local METEORON_FIRST_HASH = 3625826559
 local METEORON_SECOND_HASH = 1459016917
 local METEORON_FIRST_PROJECTILE_HASH = 615362208
@@ -106,7 +107,7 @@ local data_table = {
     [HIGH_FRIGOR_ADDITIONAL_ATK_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE, cache = nil },
     [HIGH_FRIGOR_ICE_ELEMENT_HASH] = { multiplier = FRIGOR_MULTIPLIER, scale = FRIGOR_SIZE_SCALE, cache = nil },
     [ANODYNE_HEAL_HASH] = { multiplier = nil, scale = ANODYNE_SIZE_SCALE, cache = nil },
-    [ANODYNE_ATTACK_UNDEAD_HASH] = { multiplier = ANODYNE_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil },
+    [ANODYNE_ATTACK_UNDEAD_HASH] = { multiplier = ANODYNE_ATTACK_UNDEAD_MULTIPLIER, scale = ANODYNE_SIZE_SCALE, cache = nil },
     [HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE, cache = nil },
     [CELERITY_HASH] = { multiplier = nil, scale = CELERITY_SIZE_SCALE, cache = nil },
     [HIGH_HALIDOM_HASH] = { multiplier = nil, scale = HALIDOM_SIZE_SCALE, cache = nil },
@@ -132,6 +133,7 @@ local data_table = {
     [HIGH_EMPYREAN_HASH] = { multiplier = EMPYREAN_MULTIPLIER, scale = nil, cache = nil },
     [EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil },
     [HIGH_EMPYREAN_ATTACK_UNDEAD_HASH] = { multiplier = EMPYREAN_ATTACK_UNDEAD_MULTIPLIER, scale = nil, cache = nil },
+    [PAEAN_HASH] = { multiplier = nil, scale = PAEAN_SIZE_SCALE, cache = nil },
     [METEORON_FIRST_HASH] = { multiplier = METEORON_MULTIPLIER, scale = METEORON_SIZE_SCALE, cache = nil },
     [METEORON_FIRST_PROJECTILE_HASH] = { multiplier = METEORON_PROJECTILE_MULTIPLIER, scale = METEORON_PROJECTILE_SIZE_SCALE, cache = nil },
     [METEORON_SECOND_HASH] = { multiplier = METEORON_MULTIPLIER, scale = METEORON_SIZE_SCALE, cache = nil },
@@ -159,18 +161,19 @@ local function GetManualPlayer()
     return _player_chara
 end
 
-local cache_vector3 = ValueType.new(sdk_.find_type_definition("via.vec3"))
+
 local function get_new_vector3(x, y, z)
+    local new_vector3 = ValueType.new(sdk_.find_type_definition("via.vec3"))
     local function fixed_size(val)
         if val < 0.1 then
             return 0.1
         end
         return val
     end
-    cache_vector3.x = fixed_size(x)
-    cache_vector3.y = fixed_size(y)
-    cache_vector3.z = fixed_size(z)
-    return cache_vector3
+    new_vector3.x = fixed_size(x)
+    new_vector3.y = fixed_size(y)
+    new_vector3.z = fixed_size(z)
+    return new_vector3
 end
 
 local function initialize_()
@@ -246,7 +249,6 @@ function (args)
     if UNLIMITED_THUNDERMINE then
         this:set_InterceptionCounter(0)
     end
-    
 end,
 function (rtval)
     return rtval
