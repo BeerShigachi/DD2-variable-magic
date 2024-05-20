@@ -49,7 +49,6 @@ local UNLIMITED_THUNDERMINE = false
 
 
 -- DO NOT TOUCH AFTER THIS LINE
-local sdk_ = sdk
 -- list of hash
 local FLAGRATION_VFX_HASH = 3809388717
 local HIGH_FLAGRATION_VFX_HASH = 661468703
@@ -150,7 +149,7 @@ local data_table = {
 
 
 local function get_new_vector3(x, y, z)
-    local new_vector3 = ValueType.new(sdk_.find_type_definition("via.vec3"))
+    local new_vector3 = ValueType.new(sdk.find_type_definition("via.vec3"))
     local function fixed_size(val)
         if val < 0.1 then
             return 0.1
@@ -203,7 +202,7 @@ end
 local _character_manager
 local function GetCharacterManager()
     if not _character_manager then
-        _character_manager = sdk_.get_managed_singleton("app.CharacterManager")
+        _character_manager = sdk.get_managed_singleton("app.CharacterManager")
     end
 	return _character_manager
 end
@@ -252,7 +251,7 @@ re.on_draw_ui(function()
 end)
 
 
-sdk_.hook(sdk_.find_type_definition("app.GuiManager"):get_method("OnChangeSceneType"),
+sdk.hook(sdk.find_type_definition("app.GuiManager"):get_method("OnChangeSceneType"),
     function () end,
     function (...)
         initialize_()
@@ -260,9 +259,9 @@ sdk_.hook(sdk_.find_type_definition("app.GuiManager"):get_method("OnChangeSceneT
     end)
 
 
-sdk_.hook(sdk_.find_type_definition("app.ShellManager"):get_method("registShell(app.Shell)"),
+sdk.hook(sdk.find_type_definition("app.ShellManager"):get_method("registShell(app.Shell)"),
     function (args)
-        local app_shell = sdk_.to_managed_object(args[3])
+        local app_shell = sdk.to_managed_object(args[3])
         local data = data_table[app_shell:get_ShellParamId()]
         if data and data.scale then
             local shell_base_param = app_shell:get_ShellParameter():get_field("ShellBaseParam")
@@ -275,9 +274,9 @@ sdk_.hook(sdk_.find_type_definition("app.ShellManager"):get_method("registShell(
     end)
 
 
-sdk_.hook(sdk_.find_type_definition("app.HitController"):get_method("calcDamageValue(app.HitController.DamageInfo)"),
+sdk.hook(sdk.find_type_definition("app.HitController"):get_method("calcDamageValue(app.HitController.DamageInfo)"),
 function (args)
-    local damage_info = sdk_.to_managed_object(args[3])
+    local damage_info = sdk.to_managed_object(args[3])
     -- perhaps better to use _player_chara:get_GameObject()
     local attacker_hit_controller = damage_info:get_field("<AttackOwnerHitController>k__BackingField")
     local attack_hit_controller = damage_info:get_field("<AttackHitController>k__BackingField")
@@ -315,9 +314,9 @@ function (rtval)
 end)
 
 
-sdk_.hook(sdk_.find_type_definition("app.ShellAdditionalMineVolt"):get_method("onShellUpdate()"),
+sdk.hook(sdk.find_type_definition("app.ShellAdditionalMineVolt"):get_method("onShellUpdate()"),
 function (args)
-    local this = sdk_.to_managed_object(args[2])
+    local this = sdk.to_managed_object(args[2])
     if UNLIMITED_THUNDERMINE then
         this:set_InterceptionCounter(0)
     end
