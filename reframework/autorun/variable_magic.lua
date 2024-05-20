@@ -2,6 +2,11 @@
 -- date : 15 May 2024
 -- version : 1.2.1
 
+
+-- SUPER OP if you want
+-- CHANGE THIS VALUE TO true REQUIRES RESTART THE GAME! set this true to keep pulsing until running out of the orb lifetiem.
+local UNLIMITED_THUNDERMINE = false
+
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
 local multipliers = {
@@ -43,12 +48,46 @@ local scales = {
     MAELSTORM = { name = "MAELSTORM", value = 1.0 }
 }
 
--- SUPER OP if you want
--- CHANGE THIS VALUE TO true REQUIRES RESTART THE GAME! set this true to keep pulsing until running out of the orb lifetiem.
-local UNLIMITED_THUNDERMINE = false
-
-
 -- DO NOT TOUCH AFTER THIS LINE
+-- Define the order explicitly
+local multipliers_order = {
+    "FLAGRATION",
+    "LEVIN",
+    "FRIGOR",
+    "ANODYNE_ATTACK_UNDEAD",
+    "SEISM",
+    "SALAMANDER",
+    "HAGOL",
+    "THUNDERMINE_DAMAGE",
+    "DECANTER_SAP",
+    "FLARE",
+    "EMPYREAN",
+    "EMPYREAN_ATTACK_UNDEAD",
+    "METEORON",
+    "METEORON_PROJECTILE",
+    "MAELSTORM"
+}
+
+
+local scales_order = {
+    "FLAGRATION",
+    "LEVIN",
+    "FRIGOR",
+    "ANODYNE",
+    "HALIDOM",
+    "CELERITY",
+    "SEISM",
+    "SALAMANDER",
+    "HAGOL",
+    "THUNDERMINE",
+    "FLARE",
+    "EMPYREAN",
+    "PAEAN",
+    "METEORON",
+    "METEORON_PROJECTILE",
+    "MAELSTORM"
+}
+
 -- list of hash
 local FLAGRATION_VFX_HASH = 3809388717
 local HIGH_FLAGRATION_VFX_HASH = 661468703
@@ -163,11 +202,11 @@ local function get_new_vector3(x, y, z)
 end
 
 
-local function create_drag_bars(table_)
-    for _, v in pairs(table_) do
-        local change, new_ = imgui.drag_float(v.name, v.value, 0.01, 0.1, 20, "%.2f")
+local function create_drag_bars(table_, order_)
+    for _, v in ipairs(order_) do
+        local change, new_ = imgui.drag_float(table_[v].name, table_[v].value, 0.01, 0.1, 20, "%.2f")
         if change then
-            v.value = new_
+            table_[v].value = new_
         end
     end
 end
@@ -238,12 +277,12 @@ re.on_draw_ui(function()
         end
 
         if imgui.tree_node("Action Rate Multipliers") then
-            create_drag_bars(multipliers)
+            create_drag_bars(multipliers, multipliers_order)
             imgui.tree_pop()
         end
 
         if imgui.tree_node("Scale") then
-            create_drag_bars(scales)
+            create_drag_bars(scales, scales_order)
             imgui.tree_pop()
         end
         imgui.tree_pop()
@@ -288,12 +327,13 @@ function (args)
                 local hash_ = attacker_shell_cache:get_ShellParamId()
                 local data = data_table[hash_]
                 if data and data.multiplier then
+                    print("multiplier", data.multiplier.value)
                     local attack_user_data = damage_info:get_field("<AttackUserData>k__BackingField")
                     local new_rate
                     if hash_ == SEISM_ADDITIONAL_ATK_HASH then
                         new_rate = attack_user_data:get_field("ActionRate") * data.multiplier.value
                     elseif hash_ == SALAMANDER_HASH or hash_ == HIGH_SALAMANDER_HASH then
-                        new_rate = multipliers.SALAMANDER * BASE_RATE_SALAMANDER
+                        new_rate = multipliers.SALAMANDER.value * BASE_RATE_SALAMANDER
                     elseif data.cache == nil then
                         local origin = attack_user_data:get_field("ActionRate")
                         new_rate = origin * data.multiplier.value
