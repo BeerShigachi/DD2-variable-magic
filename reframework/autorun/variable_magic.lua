@@ -92,7 +92,7 @@ local METEORON_FIRST_PROJECTILE_HASH = 615362208
 local METEORON_SECOND_PROJECTILE_HASH = 1431585106
 local MAELSTORM_HASH = 4109786672
 
--- SALAMANDER base rate, requires update
+-- SALAMANDER base rate, requires update if vanilla val changed
 local BASE_RATE_SALAMANDER = 2.0
 
 local data_table = {
@@ -142,6 +142,11 @@ local data_table = {
     [METEORON_SECOND_PROJECTILE_HASH] = { multiplier = METEORON_PROJECTILE_MULTIPLIER, scale = METEORON_PROJECTILE_SIZE_SCALE, cache = nil },
     [MAELSTORM_HASH] = { multiplier = MAELSTORM_MULTIPLIER, scale = MAELSTORM_SIZE_SCALE, cache = nil }
 }
+
+
+if reframework.get_commit_count() < 1645 then
+	re.msg("Variable Magic: Your REFramework is older version.\n If the mod does not work, Get version `REF Nightly 913` from\nhttps://github.com/praydog/REFramework-nightly/releases")
+end
 
 
 local _character_manager
