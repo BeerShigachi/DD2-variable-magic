@@ -149,45 +149,55 @@ local data_table = {
 }
 
 
+local function get_new_vector3(x, y, z)
+    local new_vector3 = ValueType.new(sdk_.find_type_definition("via.vec3"))
+    local function fixed_size(val)
+        if val < 0.1 then
+            return 0.1
+        end
+        return val
+    end
+    new_vector3.x = fixed_size(x)
+    new_vector3.y = fixed_size(y)
+    new_vector3.z = fixed_size(z)
+    return new_vector3
+end
+
+
 local function create_drag_bars(table_)
     for _, v in pairs(table_) do
         local change, new_ = imgui.drag_float(v.name, v.value, 0.01, 0.1, 20, "%.2f")
         if change then
             v.value = new_
-            -- print(data_table[3220102239].multiplier.value)
         end
     end
 end
 
--- local value = generate_list(multipliers, "multiplier")
--- local scales  = generate_list(data_table, "scale")
 
-
-re.on_draw_ui(function()
-    if imgui.tree_node("Variable Magic") then
-        if imgui.button("Reset") then
-            print("reset")
-        end
-
-        if imgui.tree_node("Action Rate Multipliers") then
-            create_drag_bars(multipliers)
-            imgui.tree_pop()
-        end
-
-        if imgui.tree_node("Scale") then
-            create_drag_bars(scales)
-            imgui.tree_pop()
-        end
-        
-        
-        imgui.tree_pop()
+local function load_config(filepath, table_)
+    local _table = json.load_file(filepath)
+    if not _table then return end
+    for _, v in pairs(_table) do
+        table_[v.name].value = v.value
     end
-    
-end)
+end
+
+
+local function save_config()
+    if not json.dump_file("VariableMagic\\multiplier.json", multipliers) then
+        re.msg("Failed to save multiplier config")
+    end
+    if not json.dump_file("VariableMagic\\scales.json", scales) then
+        re.msg("Failed to save scales config.")
+    end
+    re.msg("Saved to\nreframework\\data\\VariableMagic\\config.json")
+end
+
 
 if reframework.get_commit_count() < 1645 then
 	re.msg("Variable Magic: Your REFramework is older version.\n If the mod does not work, Get version `REF Nightly 913` from\nhttps://github.com/praydog/REFramework-nightly/releases")
 end
+
 
 
 local _character_manager
@@ -210,35 +220,45 @@ local function GetManualPlayer()
 end
 
 
-local function get_new_vector3(x, y, z)
-    local new_vector3 = ValueType.new(sdk_.find_type_definition("via.vec3"))
-    local function fixed_size(val)
-        if val < 0.1 then
-            return 0.1
-        end
-        return val
-    end
-    new_vector3.x = fixed_size(x)
-    new_vector3.y = fixed_size(y)
-    new_vector3.z = fixed_size(z)
-    return new_vector3
-end
-
 local function initialize_()
+    load_config("VariableMagic\\multiplier.json", multipliers)
+    load_config("VariableMagic\\scales.json", scales)
     _character_manager = nil
     _player_chara = nil
     _player_chara = GetManualPlayer()
 end
 
+
 initialize_()
 
--- could use 
+
+re.on_draw_ui(function()
+    if imgui.tree_node("Variable Magic") then
+        if imgui.button("Save") then
+            save_config()
+        end
+
+        if imgui.tree_node("Action Rate Multipliers") then
+            create_drag_bars(multipliers)
+            imgui.tree_pop()
+        end
+
+        if imgui.tree_node("Scale") then
+            create_drag_bars(scales)
+            imgui.tree_pop()
+        end
+        imgui.tree_pop()
+    end
+end)
+
+
 sdk_.hook(sdk_.find_type_definition("app.GuiManager"):get_method("OnChangeSceneType"),
     function () end,
     function (...)
         initialize_()
         return ...
     end)
+
 
 sdk_.hook(sdk_.find_type_definition("app.ShellManager"):get_method("registShell(app.Shell)"),
     function (args)
@@ -253,6 +273,7 @@ sdk_.hook(sdk_.find_type_definition("app.ShellManager"):get_method("registShell(
     function (rtval)
         return rtval
     end)
+
 
 sdk_.hook(sdk_.find_type_definition("app.HitController"):get_method("calcDamageValue(app.HitController.DamageInfo)"),
 function (args)
@@ -292,6 +313,7 @@ end,
 function (rtval)
     return rtval
 end)
+
 
 sdk_.hook(sdk_.find_type_definition("app.ShellAdditionalMineVolt"):get_method("onShellUpdate()"),
 function (args)
