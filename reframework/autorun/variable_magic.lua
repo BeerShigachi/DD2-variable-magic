@@ -10,6 +10,7 @@ local SCALES_STORAGE_PATH = "VariableMagic\\scales.json"
 local THUNDERMINE_STORAGE_PATH = "VariableMagic\\thundermine.json"
 
 local infinite_thundermine = false
+local thundermine_interval = 1.0
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
@@ -377,6 +378,12 @@ end)
 sdk.hook(sdk.find_type_definition("app.ShellAdditionalMineVolt"):get_method("onShellUpdate()"),
 function (args)
     local this = sdk.to_managed_object(args[2])
+    local param = this["<DetailParam>k__BackingField"]
+    local interceptionChargeTimes = param["_InterceptionChargeTimes"]
+    for i = 1, #interceptionChargeTimes do
+        interceptionChargeTimes[i] = thundermine_interval
+    end
+
     if infinite_thundermine then
         this:set_InterceptionCounter(0)
     end
