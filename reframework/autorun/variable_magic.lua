@@ -9,8 +9,12 @@ local MULTIPLIERS_STORAGE_PATH = "VariableMagic\\multiplier.json"
 local SCALES_STORAGE_PATH = "VariableMagic\\scales.json"
 local THUNDERMINE_STORAGE_PATH = "VariableMagic\\thundermine.json"
 
-local infinite_thundermine = false
-local thundermine_interval = 1.0
+
+local thundermine_config = {
+    ignore_count = false,
+    interval = 1.0
+}
+
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
@@ -237,7 +241,7 @@ end
 local function save_config()
     save_file(MULTIPLIERS_STORAGE_PATH, multipliers, "Saved multipliers to")
     save_file(SCALES_STORAGE_PATH, scales, "Saved scales to")
-    save_file(THUNDERMINE_STORAGE_PATH, infinite_thundermine, "Saved thundermine config to")
+    save_file(THUNDERMINE_STORAGE_PATH, thundermine_config, "Saved thundermine config to")
 end
 
 
@@ -272,10 +276,8 @@ local function initialize_()
     load_config(MULTIPLIERS_STORAGE_PATH, multipliers)
     load_config(SCALES_STORAGE_PATH, scales)
     local value = json.load_file(THUNDERMINE_STORAGE_PATH)
-    if value == nil then
-        infinite_thundermine = false
-    else
-        infinite_thundermine = value
+    if value ~= nil then
+        thundermine_config = value
     end
     _character_manager = nil
     _player_chara = nil
@@ -292,10 +294,16 @@ re.on_draw_ui(function()
             save_config()
         end
 
-        local change, val = imgui.checkbox("Infinite Thundermine", infinite_thundermine)
+        local change, val = imgui.checkbox("Thundermine ignore count", thundermine_config.ignore_count)
         if change then
-            infinite_thundermine = val
+            thundermine_config.ignore_count = val
         end
+
+        local change, new_ = imgui.drag_float("Thundermine interval", thundermine_config.interval, 0.01, 0.1, 10, "%.2f")
+        if change then
+            thundermine_config.interval = new_
+        end
+
 
         if imgui.tree_node("Action Rate Multipliers") then
             create_drag_bars(multipliers, multipliers_order)
@@ -381,10 +389,10 @@ function (args)
     local param = this["<DetailParam>k__BackingField"]
     local interceptionChargeTimes = param["_InterceptionChargeTimes"]
     for i = 1, #interceptionChargeTimes do
-        interceptionChargeTimes[i] = thundermine_interval
+        interceptionChargeTimes[i] = thundermine_config.interval
     end
 
-    if infinite_thundermine then
+    if thundermine_config.ignore_count then
         this:set_InterceptionCounter(0)
     end
 end,
