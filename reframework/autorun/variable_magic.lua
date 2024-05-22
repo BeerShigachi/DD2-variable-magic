@@ -5,7 +5,11 @@
 
 -- SUPER OP if you want
 -- CHANGE THIS VALUE TO true REQUIRES RESTART THE GAME! set this true to keep pulsing until running out of the orb lifetiem.
-local UNLIMITED_THUNDERMINE = false
+local MULTIPLIERS_STORAGE_PATH = "VariableMagic\\multiplier.json"
+local SCALES_STORAGE_PATH = "VariableMagic\\scales.json"
+local THUNDERMINE_STORAGE_PATH = "VariableMagic\\thundermine.json"
+
+local infinite_thundermine = false
 
 -- CONFIG: 1.0 as vanilla value. every values have to be float number. use float like 1.0 not 1.
 -- damage multipliers
@@ -221,15 +225,20 @@ local function load_config(filepath, table_)
 end
 
 
-local function save_config()
-    if not json.dump_file("VariableMagic\\multiplier.json", multipliers) then
-        re.msg("Failed to save multiplier config")
+local function save_file(file_path, data, success_message)
+    if not json.dump_file(file_path, data) then
+        re.msg("Failed to save " .. file_path)
+    else
+        re.msg(success_message .. "\nreframework\\data\\VariableMagic")
     end
-    if not json.dump_file("VariableMagic\\scales.json", scales) then
-        re.msg("Failed to save scales config.")
-    end
-    re.msg("Saved to\nreframework\\data\\VariableMagic\\config.json")
 end
+
+local function save_config()
+    save_file(MULTIPLIERS_STORAGE_PATH, multipliers, "Saved multipliers to")
+    save_file(SCALES_STORAGE_PATH, scales, "Saved scales to")
+    save_file(THUNDERMINE_STORAGE_PATH, infinite_thundermine, "Saved thundermine config to")
+end
+
 
 
 if reframework.get_commit_count() < 1645 then
@@ -259,8 +268,14 @@ end
 
 
 local function initialize_()
-    load_config("VariableMagic\\multiplier.json", multipliers)
-    load_config("VariableMagic\\scales.json", scales)
+    load_config(MULTIPLIERS_STORAGE_PATH, multipliers)
+    load_config(SCALES_STORAGE_PATH, scales)
+    local value = json.load_file(THUNDERMINE_STORAGE_PATH)
+    if value == nil then
+        infinite_thundermine = false
+    else
+        infinite_thundermine = value
+    end
     _character_manager = nil
     _player_chara = nil
     _player_chara = GetManualPlayer()
@@ -274,6 +289,11 @@ re.on_draw_ui(function()
     if imgui.tree_node("Variable Magic") then
         if imgui.button("Save") then
             save_config()
+        end
+
+        local change, val = imgui.checkbox("Infinite Thundermine", infinite_thundermine)
+        if change then
+            infinite_thundermine = val
         end
 
         if imgui.tree_node("Action Rate Multipliers") then
@@ -357,7 +377,7 @@ end)
 sdk.hook(sdk.find_type_definition("app.ShellAdditionalMineVolt"):get_method("onShellUpdate()"),
 function (args)
     local this = sdk.to_managed_object(args[2])
-    if UNLIMITED_THUNDERMINE then
+    if infinite_thundermine then
         this:set_InterceptionCounter(0)
     end
 end,
