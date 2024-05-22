@@ -230,18 +230,17 @@ local function load_config(filepath, table_)
 end
 
 
-local function save_file(file_path, data, success_message)
+local function save_file(file_path, data)
     if not json.dump_file(file_path, data) then
         re.msg("Failed to save " .. file_path)
-    else
-        re.msg(success_message .. "\nreframework\\data\\VariableMagic")
     end
 end
 
 local function save_config()
-    save_file(MULTIPLIERS_STORAGE_PATH, multipliers, "Saved multipliers to")
-    save_file(SCALES_STORAGE_PATH, scales, "Saved scales to")
-    save_file(THUNDERMINE_STORAGE_PATH, thundermine_config, "Saved thundermine config to")
+    save_file(MULTIPLIERS_STORAGE_PATH, multipliers)
+    save_file(SCALES_STORAGE_PATH, scales)
+    save_file(THUNDERMINE_STORAGE_PATH, thundermine_config)
+    re.msg("Saved config to reframework\\data\\VariableMagic\\")
 end
 
 
